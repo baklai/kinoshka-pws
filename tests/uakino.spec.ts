@@ -86,9 +86,7 @@ test.describe('Сбор фильмов с uakino.best', () => {
     await page.waitForSelector('#bottom-nav .pagi-nav');
 
     const lastPageText = await page
-      .$eval('#bottom-nav .pagi-nav a:last-of-type', (el) =>
-        el.textContent?.trim()
-      )
+      .$eval('#bottom-nav .pagi-nav a:last-of-type', el => el.textContent?.trim())
       .catch(() => null);
 
     expect(lastPageText).not.toBeNull();
@@ -118,38 +116,28 @@ test.describe('Сбор фильмов с uakino.best', () => {
       const cards = await page.$$('#dle-content .movie-item.short-item');
 
       for (const card of cards) {
-        const title = await card.$eval('.movie-title', (el) =>
-          el.textContent?.trim()
-        );
-        const link = await card.$eval(
-          '.movie-title',
-          (el) => (el as HTMLAnchorElement).href
-        );
-        const poster = await card.$eval(
-          '.movie-img img',
-          (el) => (el as HTMLImageElement).src
-        );
+        const title = await card.$eval('.movie-title', el => el.textContent?.trim());
+        const link = await card.$eval('.movie-title', el => (el as HTMLAnchorElement).href);
+        const poster = await card.$eval('.movie-img img', el => (el as HTMLImageElement).src);
         const imdb = await card
-          .$eval('.movie-desk-item .deck-value[style*="color:yellow"]', (el) =>
+          .$eval('.movie-desk-item .deck-value[style*="color:yellow"]', el =>
             el.textContent?.trim()
           )
           .catch(() => null);
         const year = await card
-          .$eval('.movie-desk-item:has-text("Рік виходу:") .deck-value', (el) =>
+          .$eval('.movie-desk-item:has-text("Рік виходу:") .deck-value', el =>
             el.textContent?.trim()
           )
           .catch(() => null);
         const genres = await card
-          .$eval('.movie-desk-item:has-text("Жанр:") .deck-value', (el) =>
-            el.textContent?.trim()
-          )
+          .$eval('.movie-desk-item:has-text("Жанр:") .deck-value', el => el.textContent?.trim())
           .catch(() => null);
         const actors = await card.$$eval(
           '.movie-desk-item:has-text("Актори:") .deck-value a',
-          (els) => els.map((a) => a.textContent?.trim())
+          els => els.map(a => a.textContent?.trim())
         );
         const description = await card
-          .$eval('.desc-about-text', (el) => el.textContent?.trim())
+          .$eval('.desc-about-text', el => el.textContent?.trim())
           .catch(() => null);
 
         allFilms.push({

@@ -5,9 +5,7 @@ const { verbose } = sqlite3;
 const sqlite = verbose();
 
 const database = new sqlite.Database('./database/kinoshka.db');
-const jsondata = JSON.parse(
-  fs.readFileSync('./database/kinoshka.json', 'utf8')
-);
+const jsondata = JSON.parse(fs.readFileSync('./database/kinoshka.json', 'utf8'));
 
 function getStringField(obj, field) {
   return obj[field] ? obj[field] : '';
@@ -43,7 +41,7 @@ database.serialize(() => {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
-  jsondata.forEach((movie) => {
+  jsondata.forEach(movie => {
     stmt.run(
       getStringField(movie, 'id'),
       getStringField(movie, 'title'),

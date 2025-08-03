@@ -25,9 +25,8 @@ const categories = [
       waitUntil: 'domcontentloaded'
     });
     await page.waitForSelector('#bottom-nav .pagi-nav');
-    const lastPage = await page.$eval(
-      '#bottom-nav .pagi-nav a:last-of-type',
-      (el) => Number(el.textContent?.trim())
+    const lastPage = await page.$eval('#bottom-nav .pagi-nav a:last-of-type', el =>
+      Number(el.textContent?.trim())
     );
     console.log(`Найдено страниц: ${lastPage}`);
 
@@ -41,32 +40,28 @@ const categories = [
       const cards = await page.$$('#dle-content .movie-item.short-item');
 
       for (const card of cards) {
-        const title = await card.$eval('.movie-title', (el) =>
-          el.textContent?.trim()
-        );
-        const link = await card.$eval('.movie-title', (el) => el.href);
-        const poster = await card.$eval('.movie-img img', (el) => el.src);
+        const title = await card.$eval('.movie-title', el => el.textContent?.trim());
+        const link = await card.$eval('.movie-title', el => el.href);
+        const poster = await card.$eval('.movie-img img', el => el.src);
         const imdb = await card
-          .$eval('.movie-desk-item .deck-value[style*="color:yellow"]', (el) =>
+          .$eval('.movie-desk-item .deck-value[style*="color:yellow"]', el =>
             el.textContent?.trim()
           )
           .catch(() => null);
         const year = await card
-          .$eval('.movie-desk-item:has-text("Рік виходу:") .deck-value', (el) =>
+          .$eval('.movie-desk-item:has-text("Рік виходу:") .deck-value', el =>
             el.textContent?.trim()
           )
           .catch(() => null);
         const genres = await card
-          .$eval('.movie-desk-item:has-text("Жанр:") .deck-value', (el) =>
-            el.textContent?.trim()
-          )
+          .$eval('.movie-desk-item:has-text("Жанр:") .deck-value', el => el.textContent?.trim())
           .catch(() => null);
         const actors = await card.$$eval(
           '.movie-desk-item:has-text("Актори:") .deck-value a',
-          (els) => els.map((a) => a.textContent?.trim())
+          els => els.map(a => a.textContent?.trim())
         );
         const description = await card
-          .$eval('.desc-about-text', (el) => el.textContent?.trim())
+          .$eval('.desc-about-text', el => el.textContent?.trim())
           .catch(() => null);
 
         allFilms.push({
@@ -84,17 +79,11 @@ const categories = [
       }
       console.log(`✅ Карточек на странице: ${cards.length}`);
       // 3. Сохраняем результат
-      fs.writeFileSync(
-        'database.json',
-        JSON.stringify(allFilms, null, 2),
-        'utf-8'
-      );
-      console.log(
-        `🎉 Сохранено карточек: ${allFilms.length} → в файл: films.json`
-      );
-      await new Promise((res) => setTimeout(res, 5000));
+      fs.writeFileSync('database.json', JSON.stringify(allFilms, null, 2), 'utf-8');
+      console.log(`🎉 Сохранено карточек: ${allFilms.length} → в файл: films.json`);
+      await new Promise(res => setTimeout(res, 5000));
     }
-    await new Promise((res) => setTimeout(res, 30000));
+    await new Promise(res => setTimeout(res, 30000));
   }
 
   await browser.close();
